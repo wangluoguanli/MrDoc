@@ -25,7 +25,7 @@ sitemaps = SitemapAll()
 urlpatterns = [
     path('admin/', admin.site.urls), # Django自带admin
     path('',include('app_doc.urls')), # doc应用
-    path('user/',include('app_admin.urls'),), # admin应用
+    path('user/',include('app_admin.urls'),), # admin应用  #$用户登录
     path('api/',include('app_api.urls')), # API应用
     path('api_app/',include('app_api.urls_app')), # App的API接口
     re_path('^static/(?P<path>.*)$',serve,{'document_root':settings.STATIC_ROOT}),# 静态文件
