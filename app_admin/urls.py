@@ -2,7 +2,7 @@ from django.urls import path,re_path
 from app_admin import views
 
 urlpatterns = [
-    path('login/',views.log_in,name='login'),# 登录
+    path('login/',views.log_in,name='login'),# 登录  #$普通用户登录入口ip/user/login
     path('logout/',views.log_out,name='logout'),# 注销
     path('register/',views.register,name="register"), # 注册
     path('user_manage/',views.admin_user,name="user_manage"), # 用户管理
