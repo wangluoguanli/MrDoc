@@ -36,7 +36,7 @@ def check_code(request):
         return HttpResponse("请求异常：{}".format(repr(e)))
 
 
-# 登录视图
+# 登录视图  #$普通用户登录调用
 def log_in(request):
     if request.method == 'GET':
         # 登录用户访问登录页面自动跳转到首页
@@ -49,9 +49,17 @@ def log_in(request):
             username = request.POST.get('username','')
             pwd = request.POST.get('password','')
             if username != '' and pwd != '':
+                '''
+                Django自带的用户认证模块--auth，它默认使用 auth_user 表来存储用户数据。
+                authenticate()
+                提供了用户认证功能，即验证用户名以及密码是否正确，一般需要username 、password两个关键字参数。
+                如果认证成功（用户名和密码正确有效），便会返回一个 User 对象。
+                authenticate()会在该 User 对象上设置一个属性来标识后端已经认证了该用户，且该信息在后续的登录过程中是需要的。
+                user = authenticate(username='usernamer',password='password')
+                '''
                 user = authenticate(username=username,password=pwd)
                 if user is not None:
-                    if user.is_active:
+                    if user.is_active:  #user表单is_active验证用户登录状态
                         login(request,user)
                         return redirect('/')
                     else:
@@ -94,8 +102,11 @@ def register(request):
             # 判断是否输入了用户名、邮箱和密码
             if username and email and password:
                 if '@'in email:
-                    email_exit = User.objects.filter(email=email)
+                    email_exit = User.objects.filter(email=email)  
+                    #filter方法是从数据库的取得匹配的结果，返回一个对象列表，如果记录不存在的话，它会返回[]
+                    #get是从数据库的取得一个匹配的结果，返回一个对象，如果记录不存在的话，它会报错。
                     username_exit = User.objects.filter(username=username)
+                    #count() 方法用于统计某个元素在列表中出现的次数 list.count(obj)
                     if email_exit.count() > 0: # 验证电子邮箱
                         errormsg = '此电子邮箱已被注册！'
                         return render(request, 'register.html', locals())
@@ -121,7 +132,7 @@ def register(request):
                         # 登录用户
                         user = authenticate(username=username, password=password)
                         # 注册码数据更新
-                        if is_register_code.count() > 0:
+                        if is_register_code.count() > 0:  # 开启了注册码设置
                             r_all_cnt = register_code_value.all_cnt # 注册码的最大使用次数
                             r_used_cnt = register_code_value.used_cnt + 1 # 更新注册码的已使用次数
                             r_use_user = register_code_value.user_list # 注册码的使用用户
